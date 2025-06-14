@@ -17,6 +17,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+// --- Firebase Firestore Imports ---
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,9 +31,26 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     private LinearLayout newsContainerLayout;
+    private BottomNavigationView bottomNavigationView; // Made global for easier access
 
-    // Dummy data list
+    // Firebase Firestore instance
+    private FirebaseFirestore db;
+
+    // List to hold fetched news items
     private List<NewsItem> allNewsItems;
+
+    // --- Firestore Collection Name and Field Names ---
+    // This is the name of your collection in Firestore where news data is stored.
+    public static final String NEWS_COLLECTION_NAME = "news_items";
+
+    // These are the field names within each document in the 'news_items' collection.
+    // Ensure these match exactly with your Firestore document field keys.
+    public static final String FIELD_TITLE = "title";
+    public static final String FIELD_BODY = "body";
+    public static final String FIELD_DATE = "date";
+    public static final String FIELD_TYPE = "type";
+    public static final String FIELD_IMAGE_URL = "imageUrl";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,20 +58,25 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         newsContainerLayout = findViewById(R.id.news_container_layout);
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView = findViewById(R.id.bottom_navigation); // Initialize global variable
 
-        // Initialize dummy data
-        initializeDummyNewsData();
+        // --- Initialize Firebase Firestore ---
+        db = FirebaseFirestore.getInstance();
+        allNewsItems = new ArrayList<>(); // Initialize the list
 
         // Set up Bottom Navigation Listener
         bottomNavigationView.setOnItemSelectedListener(this::onNavigationItemSelected);
 
-        // Load all news initially when the app starts
-        loadNews(""); // Empty string means no specific filter initially
+        // --- Fetch news data from Firestore when the activity is created ---
+        fetchNewsFromFirestore();
     }
 
     private boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
+        // Clear selection to prevent item from staying highlighted if navigation goes to another activity
+        // or if you want to reset highlight for dynamic content.
+        // bottomNavigationView.getMenu().setGroupCheckable(0, false, true);
+
         if (id == R.id.nav_all) {
             loadNews(""); // Show all news
             return true;
@@ -63,83 +92,89 @@ public class MainActivity extends AppCompatActivity {
         } else if (id == R.id.nav_profile) {
             Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
             startActivity(intent);
+            // We return false here because we are navigating to a new activity.
+            // The item won't stay "selected" on the bottom nav.
+            return false;
         }
         return false;
     }
 
-    private void initializeDummyNewsData() {
-        allNewsItems = new ArrayList<>();
+    /**
+     * Fetches news data from the Firestore collection specified by NEWS_COLLECTION_NAME.
+     * Populates the allNewsItems list and then displays them.
+     */
+    private void fetchNewsFromFirestore() {
+        Log.d(TAG, "Attempting to fetch news from Firestore collection: " + NEWS_COLLECTION_NAME);
 
-        // Dummy data for Sports (4 items)
-        allNewsItems.add(new NewsItem(
-                "UoC Honours Outstanding Sports Achievements",
-                "University of Colombo celebrated the remarkable achievements of its undergraduate sportsmen and sportswomen at the Colours Awarding Ceremony held on April 4th, 2023",
-                "2025-06-05", "Sports", "https://cmb.ac.lk/wp-content/uploads/colours-awarding-ceremony-2023-30.jpg"));
-        allNewsItems.add(new NewsItem(
-                "Certificate Course on System Dynamics for Sustainable Technological Resilience  ",
-                "Discover the secrets of innovation, master resilient bio-industry strategies, and focus on making impactful decisions to shape a sustainable future.",
-                "2025-05-05", "Academic", "https://tech.cmb.ac.lk/wp-content/uploads/2024/05/SDTSRBI_31_05_2024.png"));
-        allNewsItems.add(new NewsItem(
-                "Annual Inter-Faculty Sports Meet 2025",
-                "Get ready for action! The Annual Inter-Faculty Sports Meet 2025 is now underway, bringing together athletes from every faculty",
-                "2025-05-28", "Sports", "https://amaledu.lk/wp-content/uploads/2023/10/DSC_9062.jpg-scaled.jpg"));
-        allNewsItems.add(new NewsItem(
-                "Digital Detox Drive Launched at the University of Colombo\n",
-                "he University of Colombo launched the “Digital Detox Drive,” an e-waste collection campaign aimed at promoting environmental responsibility and proper electronic waste disposal.",
-                "2025-06-20", "Faculty Events", "https://cmb.ac.lk/wp-content/uploads/digital-detox-drive-launched-03.jpg"));
-        allNewsItems.add(new NewsItem(
-                "New Fitness Center Opens for Students",
-                "A state-of-the-art fitness center, equipped with modern machinery and professional trainers, is now open to all registered students above Canteen",
-                "2025-05-10", "Sports", "https://mannycantor.org/wp-content/uploads/2022/10/PhotobyBridgetBadore-9835-1536x1024.jpg"));
+        // Clear existing items to avoid duplicates on refresh or re-fetch
+        allNewsItems.clear();
 
-        // Dummy data for Academic (4 items)
-        allNewsItems.add(new NewsItem(
-                "Certificate Course in Geographic Information System ",
-                "This Course Will Be conducted integrating both hands on and mnds on experience with mix approach of both lectures and laboratory exercises",
-                "2025-06-15", "Academic", "https://arts.cmb.ac.lk/wp-content/uploads/2025/05/57-GIS.jpg"));
+        db.collection(NEWS_COLLECTION_NAME)
+                .get() // Get all documents from the collection
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "News data fetch successful.");
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                // Extract data for each NewsItem
+                                String title = document.getString(FIELD_TITLE);
+                                String body = document.getString(FIELD_BODY);
+                                String date = document.getString(FIELD_DATE);
+                                String type = document.getString(FIELD_TYPE);
+                                String imageUrl = document.getString(FIELD_IMAGE_URL);
 
-        allNewsItems.add(new NewsItem(
-                "Registrations are open for the certificate courses",
-                "Registrations are open for you to enroll in the certificate courses conducted by the Department of Instrumentation and Automation Technology, University of Colombo.",
-                "2025-04-18", "Academic", "https://tech.cmb.ac.lk/wp-content/uploads/2023/03/Flyer-IAT-1448x2048.jpg"));
-
-        // Dummy data for Faculty Events (4 items)
-
-        allNewsItems.add(new NewsItem(
-                "Beach Cleanup and Basic Water Safety Project",
-                "members of the Environmental Technology Society, Faculty of Technology, University of Colombo united for a crucial cause at Panadura Beach. Recognizing the dire state of Sri Lanka’s polluted beaches, driven by their commitment to environmental protection, embarked on a mission to safeguard the coastline.",
-                "2025-05-12", "Faculty Events", "https://tech.cmb.ac.lk/wp-content/uploads/2023/12/Beach-Cleanup3.jpg"));
-        allNewsItems.add(new NewsItem(
-                "Educational Visit to 'Diyasaru Uyana’, Battaramulla",
-                "Students of the Department of Environmental Technology visited the ‘Diyasaru Uyana’ which is a well-functioning urban wetland park under the Sri Lanka Land Development Cooperation, Battaramulla.",
-                "2025-03-15", "Faculty Events", "https://tech.cmb.ac.lk/wp-content/uploads/2019/12/IMG_20191101_100300.jpg"));
+                                // Create a NewsItem object and add it to the list
+                                allNewsItems.add(new NewsItem(title, body, date, type, imageUrl));
+                                Log.d(TAG, "Added news item: " + title);
+                            }
+                            // After fetching all data, load the news into the UI
+                            loadNews(""); // Load all news by default initially
+                        } else {
+                            Log.w(TAG, "Error getting news documents: ", task.getException());
+                            Toast.makeText(MainActivity.this, "Failed to load news: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
     }
 
-
-
+    /**
+     * Loads news items into the UI, optionally filtering by newsTypeFilter.
+     *
+     * @param newsTypeFilter The type of news to display (e.g., "Sports", "Academic", "Faculty Events").
+     * An empty string "" will display all news.
+     */
     private void loadNews(String newsTypeFilter) {
         newsContainerLayout.removeAllViews(); // Clear previous news items
 
-        if (allNewsItems != null) {
-            // Log the filter being applied for debugging
-            Log.d(TAG, "Loading news with filter: " + (newsTypeFilter.isEmpty() ? "All" : newsTypeFilter));
+        if (allNewsItems != null && !allNewsItems.isEmpty()) {
+            Log.d(TAG, "Displaying news with filter: " + (newsTypeFilter.isEmpty() ? "All" : newsTypeFilter));
 
+            boolean itemsFound = false;
             for (NewsItem newsItem : allNewsItems) {
                 // Apply filter: If filter is empty, show all; otherwise, match by type
                 if (newsTypeFilter.isEmpty() || newsItem.getType().equalsIgnoreCase(newsTypeFilter)) {
                     addNewsCard(newsItem);
+                    itemsFound = true;
                 }
             }
-            if (newsContainerLayout.getChildCount() == 0 && !newsTypeFilter.isEmpty()) {
+            if (!itemsFound && !newsTypeFilter.isEmpty()) {
                 Toast.makeText(this, "No news found for '" + newsTypeFilter + "'.", Toast.LENGTH_SHORT).show();
             }
+        } else if (allNewsItems != null && allNewsItems.isEmpty()) {
+            Toast.makeText(this, "No news items available. Please check Firestore.", Toast.LENGTH_LONG).show();
+            Log.d(TAG, "allNewsItems is empty.");
         } else {
-            Toast.makeText(MainActivity.this, "Error: Dummy data not initialized.", Toast.LENGTH_SHORT).show();
-            Log.e(TAG, "allNewsItems list is null. Dummy data setup might be incorrect.");
+            Toast.makeText(MainActivity.this, "Error: News data not initialized.", Toast.LENGTH_SHORT).show();
+            Log.e(TAG, "allNewsItems list is null.");
         }
     }
 
-
+    /**
+     * Inflates and populates a single news card view, then adds it to the newsContainerLayout.
+     *
+     * @param newsItem The NewsItem object containing data for the card.
+     */
     private void addNewsCard(NewsItem newsItem) {
         // Inflate the card layout
         LayoutInflater inflater = LayoutInflater.from(this);
@@ -168,13 +203,10 @@ public class MainActivity extends AppCompatActivity {
         } else {
             // If no image URL, set a default background or hide the ImageView
             newsImage.setImageResource(R.drawable.ic_broken_image); // Or set a solid color background
+            // You might want to hide the ImageView if there's no image: newsImage.setVisibility(View.GONE);
         }
 
         // Add the populated card to the container layout
         newsContainerLayout.addView(newsCardView);
     }
-
-
-
-
 }
