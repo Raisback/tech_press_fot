@@ -33,33 +33,22 @@
             android:inputType="textPersonName"
             android:maxLines="1"
             android:singleLine="true"
-            android:textColor="@color/md_theme_light_onSurface"
-            android:textColorHint="#FF0000" />
-        />
-
-    </com.google.android.material.textfield.TextInputLayout>
+            android:textColor="@android:color/black"  android:textColorHint="#999999" /> </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayoutEmail"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Email (Read-only)"
-        app:boxStrokeColor="?attr/colorOnSurface"
-        app:hintTextColor="?attr/colorOnSurface"
-        android:enabled="false"
-        android:layout_marginBottom="24dp">
-
+        android:hint="Email" app:boxStrokeColor="?attr/colorPrimary" app:hintTextColor="?attr/colorPrimary"   android:layout_marginBottom="24dp">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editTextEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
-            android:focusable="false"
-            android:longClickable="false"
-            android:cursorVisible="false"
-            android:textColor="?attr/colorOnSurfaceVariant"
-            android:background="@android:color/transparent"/> </com.google.android.material.textfield.TextInputLayout>
+            android:singleLine="true"
+            android:maxLines="1"
+            android:textColor="@android:color/black" /> </com.google.android.material.textfield.TextInputLayout>
 
 
     <LinearLayout

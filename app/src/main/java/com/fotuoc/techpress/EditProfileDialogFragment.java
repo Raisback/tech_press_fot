@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast; // For simple feedback
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 import androidx.annotation.NonNull;
@@ -28,8 +30,9 @@ public class EditProfileDialogFragment extends DialogFragment {
     private Button btnSave;
 
     // Interface to communicate back to the hosting Activity
+    // Now includes the newEmail parameter
     public interface EditProfileDialogListener {
-        void onSaveClick(String newUserName);
+        void onSaveClick(String newUserName, String newEmail);
     }
 
     private EditProfileDialogListener listener;
@@ -49,6 +52,7 @@ public class EditProfileDialogFragment extends DialogFragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         try {
+            // Ensure the hosting activity implements the listener interface
             listener = (EditProfileDialogListener) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + " must implement EditProfileDialogListener");
@@ -66,36 +70,53 @@ public class EditProfileDialogFragment extends DialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // Initialize UI elements
         editTextUserName = view.findViewById(R.id.editTextUserName);
         editTextEmail = view.findViewById(R.id.editTextEmail);
         btnCancel = view.findViewById(R.id.btnCancel);
         btnSave = view.findViewById(R.id.btnSave);
 
-        // Get arguments passed to the dialog
+        // Get arguments passed to the dialog (current username and email)
         Bundle args = getArguments();
         if (args != null) {
             String currentUserName = args.getString(ARG_USERNAME);
             String currentUserEmail = args.getString(ARG_USEREMAIL);
 
+            // Set the current values to the EditText fields
             editTextUserName.setText(currentUserName);
             editTextEmail.setText(currentUserEmail);
         }
 
-        btnCancel.setOnClickListener(v -> dismiss()); // Close the dialog
+        // Set OnClickListener for the Cancel button to dismiss the dialog
+        btnCancel.setOnClickListener(v -> dismiss());
 
+        // Set OnClickListener for the Save button to validate and save changes
         btnSave.setOnClickListener(v -> {
             String newUserName = editTextUserName.getText().toString().trim();
+            String newEmail = editTextEmail.getText().toString().trim(); // Get new email value
 
+            // Input validation for User Name
             if (newUserName.isEmpty()) {
-                Toast.makeText(getContext(), "User Name cannot be empty", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "User Name cannot be empty.", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            // Communicate the new user name back to the activity
-            if (listener != null) {
-                listener.onSaveClick(newUserName);
+            // Input validation for Email
+            if (newEmail.isEmpty()) {
+                Toast.makeText(getContext(), "Email cannot be empty.", Toast.LENGTH_SHORT).show();
+                return;
             }
-            dismiss(); // Close the dialog after saving
+
+            if (!isValidEmail(newEmail)) {
+                Toast.makeText(getContext(), "Please enter a valid email address.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Communicate the new user name and email back to the activity via the listener
+            if (listener != null) {
+                listener.onSaveClick(newUserName, newEmail);
+            }
+            dismiss(); // Close the dialog after successful save
         });
     }
 
@@ -103,6 +124,7 @@ public class EditProfileDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         // Use a MaterialComponents dialog theme for consistent styling
+        // This ensures the dialog respects Material Design guidelines
         return new Dialog(requireContext(), com.google.android.material.R.style.Theme_MaterialComponents_Dialog);
     }
 
@@ -115,5 +137,18 @@ public class EditProfileDialogFragment extends DialogFragment {
             int height = ViewGroup.LayoutParams.WRAP_CONTENT;
             getDialog().getWindow().setLayout(width, height);
         }
+    }
+
+    /**
+     * Helper method to validate email format using a regular expression.
+     * @param email The email string to validate.
+     * @return true if the email is valid, false otherwise.
+     */
+    private boolean isValidEmail(String email) {
+        // Simple regex for email validation (can be more complex if needed)
+        String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$";
+        Pattern pattern = Pattern.compile(emailRegex);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
     }
 }
