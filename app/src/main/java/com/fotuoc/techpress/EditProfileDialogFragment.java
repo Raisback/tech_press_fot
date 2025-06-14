@@ -26,8 +26,6 @@ public class EditProfileDialogFragment extends DialogFragment {
 
     private TextInputEditText editTextUserName;
     private TextInputEditText editTextEmail;
-    private Button btnCancel;
-    private Button btnSave;
 
     // Interface to communicate back to the hosting Activity
     // Now includes the newEmail parameter
@@ -55,7 +53,7 @@ public class EditProfileDialogFragment extends DialogFragment {
             // Ensure the hosting activity implements the listener interface
             listener = (EditProfileDialogListener) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + " must implement EditProfileDialogListener");
+            throw new ClassCastException(context + " must implement EditProfileDialogListener");
         }
     }
 
@@ -73,8 +71,8 @@ public class EditProfileDialogFragment extends DialogFragment {
         // Initialize UI elements
         editTextUserName = view.findViewById(R.id.editTextUserName);
         editTextEmail = view.findViewById(R.id.editTextEmail);
-        btnCancel = view.findViewById(R.id.btnCancel);
-        btnSave = view.findViewById(R.id.btnSave);
+        Button btnCancel = view.findViewById(R.id.btnCancel);
+        Button btnSave = view.findViewById(R.id.btnSave);
 
         // Get arguments passed to the dialog (current username and email)
         Bundle args = getArguments();
@@ -123,7 +121,7 @@ public class EditProfileDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        // Use a MaterialComponents dialog theme for consistent styling
+
         // This ensures the dialog respects Material Design guidelines
         return new Dialog(requireContext(), com.google.android.material.R.style.Theme_MaterialComponents_Dialog);
     }

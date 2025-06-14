@@ -1,16 +1,11 @@
 package com.fotuoc.techpress;
 
 public class NewsItem {
-    private String title;
-    private String body;
-    private String date;
-    private String type; // e.g., "Sports", "Academic", "Faculty Events"
-    private String imageUrl;
-
-    // Required no-argument constructor for Firebase (good practice even with dummy data)
-    public NewsItem() {
-        // Default constructor required for calls to DataSnapshot.toObject(NewsItem.class)
-    }
+    private final String title;
+    private final String body;
+    private final String date;
+    private final String type; // e.g., "Sports", "Academic", "Faculty Events"
+    private final String imageUrl;
 
     public NewsItem(String title, String body, String date, String type, String imageUrl) {
         this.title = title;
@@ -41,24 +36,4 @@ public class NewsItem {
         return imageUrl;
     }
 
-    // --- Setters (optional, but good for data manipulation if needed) ---
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setBody(String body) {
-        this.body = body;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
 }

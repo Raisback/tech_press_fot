@@ -27,15 +27,9 @@ public class DevActivity extends AppCompatActivity {
                 // Navigate to ProfileActivity
                 Intent intent = new Intent(DevActivity.this, ProfileActivity.class);
                 startActivity(intent);
-                // Optionally, finish this activity if you don't want to come back to it
-                // finish();
             }
         });
 
-        // You can dynamically set the developer info here if needed
-        // TextView textViewName = findViewById(R.id.textViewName);
-        // textViewName.setText("Name: Your Real Name");
-        // ... and so on for other TextViews
     }
 
 }

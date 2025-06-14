@@ -32,5 +32,6 @@
     <string name="example_user_name">example user name</string>
     <string name="john_doe_example_com">john.doe@example.com</string>
     <string name="edit_info">Edit Info</string>
+    <string name="email">Email</string>
 
 </resources>

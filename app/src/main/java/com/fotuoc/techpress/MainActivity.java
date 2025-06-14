@@ -20,9 +20,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 // --- Firebase Firestore Imports ---
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +28,6 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     private LinearLayout newsContainerLayout;
-    private BottomNavigationView bottomNavigationView; // Made global for easier access
 
     // Firebase Firestore instance
     private FirebaseFirestore db;
@@ -58,7 +54,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         newsContainerLayout = findViewById(R.id.news_container_layout);
-        bottomNavigationView = findViewById(R.id.bottom_navigation); // Initialize global variable
+        // Made global for easier access
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation); // Initialize global variable
 
         // --- Initialize Firebase Firestore ---
         db = FirebaseFirestore.getInstance();
@@ -111,29 +108,26 @@ public class MainActivity extends AppCompatActivity {
 
         db.collection(NEWS_COLLECTION_NAME)
                 .get() // Get all documents from the collection
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "News data fetch successful.");
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                // Extract data for each NewsItem
-                                String title = document.getString(FIELD_TITLE);
-                                String body = document.getString(FIELD_BODY);
-                                String date = document.getString(FIELD_DATE);
-                                String type = document.getString(FIELD_TYPE);
-                                String imageUrl = document.getString(FIELD_IMAGE_URL);
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Log.d(TAG, "News data fetch successful.");
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            // Extract data for each NewsItem
+                            String title = document.getString(FIELD_TITLE);
+                            String body = document.getString(FIELD_BODY);
+                            String date = document.getString(FIELD_DATE);
+                            String type = document.getString(FIELD_TYPE);
+                            String imageUrl = document.getString(FIELD_IMAGE_URL);
 
-                                // Create a NewsItem object and add it to the list
-                                allNewsItems.add(new NewsItem(title, body, date, type, imageUrl));
-                                Log.d(TAG, "Added news item: " + title);
-                            }
-                            // After fetching all data, load the news into the UI
-                            loadNews(""); // Load all news by default initially
-                        } else {
-                            Log.w(TAG, "Error getting news documents: ", task.getException());
-                            Toast.makeText(MainActivity.this, "Failed to load news: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                            // Create a NewsItem object and add it to the list
+                            allNewsItems.add(new NewsItem(title, body, date, type, imageUrl));
+                            Log.d(TAG, "Added news item: " + title);
                         }
+                        // After fetching all data, load the news into the UI
+                        loadNews(""); // Load all news by default initially
+                    } else {
+                        Log.w(TAG, "Error getting news documents: ", task.getException());
+                        Toast.makeText(MainActivity.this, "Failed to load news: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
     }
@@ -161,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
             if (!itemsFound && !newsTypeFilter.isEmpty()) {
                 Toast.makeText(this, "No news found for '" + newsTypeFilter + "'.", Toast.LENGTH_SHORT).show();
             }
-        } else if (allNewsItems != null && allNewsItems.isEmpty()) {
+        } else if (allNewsItems != null) {
             Toast.makeText(this, "No news items available. Please check Firestore.", Toast.LENGTH_LONG).show();
             Log.d(TAG, "allNewsItems is empty.");
         } else {

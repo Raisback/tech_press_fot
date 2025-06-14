@@ -9,13 +9,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull; // Added for @NonNull annotation
+// Added for @NonNull annotation
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnCompleteListener; // Added for OnCompleteListener
-import com.google.android.gms.tasks.Task; // Added for Task
-import com.google.firebase.auth.AuthCredential; // Might be needed for re-auth
-import com.google.firebase.auth.EmailAuthProvider; // Might be needed for re-auth
+// Added for OnCompleteListener
+// Added for Task
+// Might be needed for re-auth
+// Might be needed for re-auth
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest; // Added for profile update
@@ -89,9 +89,6 @@ public class ProfileActivity extends AppCompatActivity implements EditProfileDia
             currentUserEmail = "N/A";
             Toast.makeText(this, "User not logged in.", Toast.LENGTH_SHORT).show();
             // Consider redirecting to AuthActivity
-            // Intent intent = new Intent(ProfileActivity.this, AuthActivity.class);
-            // startActivity(intent);
-            // finish();
         }
 
         textViewUserName.setText(currentUserName);
@@ -118,24 +115,21 @@ public class ProfileActivity extends AppCompatActivity implements EditProfileDia
             if (emailChanged) {
                 // --- Update User Email ---
                 user.updateEmail(newEmail)
-                        .addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    Log.d(TAG, "User email address updated.");
-                                    currentUserEmail = newEmail; // Update local variable
-                                    textViewUserEmail.setText(newEmail); // Update UI
-                                    Toast.makeText(ProfileActivity.this, "Email updated successfully.", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    Log.e(TAG, "Error updating email.", task.getException());
-                                    // Most common error: FirebaseTooManyRequestsException (if not recently signed in)
-                                    // or FirebaseAuthInvalidCredentialsException (invalid format)
-                                    // If it's RECENT_LOGIN_REQUIRED, you need to re-authenticate the user.
-                                    Toast.makeText(ProfileActivity.this,
-                                            "Failed to update email: " + task.getException().getMessage() +
-                                                    "\n(Might require recent login)",
-                                            Toast.LENGTH_LONG).show();
-                                }
+                        .addOnCompleteListener(this, task -> {
+                            if (task.isSuccessful()) {
+                                Log.d(TAG, "User email address updated.");
+                                currentUserEmail = newEmail; // Update local variable
+                                textViewUserEmail.setText(newEmail); // Update UI
+                                Toast.makeText(ProfileActivity.this, "Email updated successfully.", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Log.e(TAG, "Error updating email.", task.getException());
+                                // Most common error: FirebaseTooManyRequestsException (if not recently signed in)
+                                // or FirebaseAuthInvalidCredentialsException (invalid format)
+                                // If it's RECENT_LOGIN_REQUIRED, you need to re-authenticate the user.
+                                Toast.makeText(ProfileActivity.this,
+                                        "Failed to update email: " + task.getException().getMessage() +
+                                                "\n(Might require recent login)",
+                                        Toast.LENGTH_LONG).show();
                             }
                         });
             }
@@ -148,20 +142,17 @@ public class ProfileActivity extends AppCompatActivity implements EditProfileDia
                         .build();
 
                 user.updateProfile(profileUpdates)
-                        .addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    Log.d(TAG, "User profile updated (display name).");
-                                    currentUserName = newUserName; // Update local variable
-                                    textViewUserName.setText(newUserName); // Update UI
-                                    Toast.makeText(ProfileActivity.this, "Display name updated successfully.", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    Log.e(TAG, "Error updating display name.", task.getException());
-                                    Toast.makeText(ProfileActivity.this,
-                                            "Failed to update display name: " + task.getException().getMessage(),
-                                            Toast.LENGTH_LONG).show();
-                                }
+                        .addOnCompleteListener(this, task -> {
+                            if (task.isSuccessful()) {
+                                Log.d(TAG, "User profile updated (display name).");
+                                currentUserName = newUserName; // Update local variable
+                                textViewUserName.setText(newUserName); // Update UI
+                                Toast.makeText(ProfileActivity.this, "Display name updated successfully.", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Log.e(TAG, "Error updating display name.", task.getException());
+                                Toast.makeText(ProfileActivity.this,
+                                        "Failed to update display name: " + task.getException().getMessage(),
+                                        Toast.LENGTH_LONG).show();
                             }
                         });
             }
@@ -173,9 +164,6 @@ public class ProfileActivity extends AppCompatActivity implements EditProfileDia
         } else {
             Toast.makeText(this, "User not logged in. Cannot update profile.", Toast.LENGTH_SHORT).show();
             // Optionally redirect to login
-            // Intent intent = new Intent(ProfileActivity.this, AuthActivity.class);
-            // startActivity(intent);
-            // finish();
         }
     }
 
