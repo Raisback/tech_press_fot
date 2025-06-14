@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "508626124310",
+    "project_id": "techpress-ff7ac78f",
+    "storage_bucket": "techpress-ff7ac78f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:508626124310:android:40ad760d9fcd0fc97dbf37",
+        "android_client_info": {
+          "package_name": "com.fotuoc.techpress"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQhRGKSjH6oW5GvHDFJtod8zrW724ScVc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

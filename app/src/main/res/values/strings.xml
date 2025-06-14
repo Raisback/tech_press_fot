@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">Tech Press</string>
+    <string name="signup">SignUp here.</string>
+    <string name="signupdes">If you don\'t have an account ? </string>
+    <string name="todo">TODO</string>
+    <string name="toLogin">I have an account. </string>
+    <string name="splashtext">Tech Press</string>"
+    <string name="developerinfo">Developer Info</string>"
+    <string name="logintext">Login</string>
+    <string name="UserID">Email ID</string>">
+    <string name="password">Password</string>
+    <string name="username_hint">Username</string>
+    <string name="reenter_password_hint">Re-enter Password</string>
+    <string name="signuppass">Sign Up</string>">
+    <string name="rightimage">right_corner</string>
+    <string name="news_image_description">Image related to the news article</string>
+
+    <string name="leftimage">left_buttom</string>
+    <string name="username">User Name</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="news_image">News Image</string>
+    <string name="profile_picture">Profile Picture</string>
+    <string name="user_info">User Info.</string>
+    <string name="home">Home</string>
+    <string name="about_developer">About Developer</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="example_user_name">example user name</string>
+    <string name="john_doe_example_com">john.doe@example.com</string>
+    <string name="edit_info">Edit Info</string>
+
+</resources>
