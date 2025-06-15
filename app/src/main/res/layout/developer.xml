@@ -16,7 +16,7 @@
         android:layout_marginTop="50dp"
         android:scaleType="centerCrop"
         android:src="@drawable/my_profile"
-        android:contentDescription="User Profile Picture"
+        android:contentDescription="@string/user_profile_picture"
         app:shapeAppearanceOverlay="@style/roundedImageViewRounded" />
 
     <TextView
@@ -24,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
-        android:text="Name: M.M.M.Raisary"
+        android:text="@string/name_m_m_m_raisary"
         android:textSize="18sp"
         android:textStyle="bold" />
 
@@ -33,7 +33,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
-        android:text="Registration Number: 2022t01566"
+        android:text="@string/registration_number_2022t01566"
         android:textSize="16sp" />
 
     <TextView
@@ -41,7 +41,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="Release Number: 0.1"
+        android:text="@string/release_number_0_1"
         android:textSize="16sp" />
 
     <com.google.android.material.button.MaterialButton
@@ -49,6 +49,6 @@
         android:layout_width="163dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text="Back" />
+        android:text="@string/back" />
 
 </LinearLayout>

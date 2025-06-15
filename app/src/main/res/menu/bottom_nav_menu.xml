@@ -3,24 +3,23 @@
     <item
         android:id="@+id/nav_all"
         android:icon="@drawable/ic_all_news"
-        android:title="All News" />
-
-    <item
-        android:id="@+id/nav_academic"
-        android:icon="@drawable/ic_academic"
-        android:title="Academic" />
+        android:title="@string/all_news" />
     <item
         android:id="@+id/nav_sports"
         android:icon="@drawable/ic_sports"
-        android:title="Sports" />
+        android:title="@string/sports" />
+    <item
+        android:id="@+id/nav_academic"
+        android:icon="@drawable/ic_academic"
+        android:title="@string/academic" />
 
     <item
         android:id="@+id/nav_faculty_events"
         android:icon="@drawable/ic_event"
-        android:title="Faculty Events" />
+        android:title="@string/events" />
     <item
         android:id="@+id/nav_profile"
         android:icon="@drawable/ic_account_circle"
-        android:title="Account" />
+        android:title="@string/account" />
 
 </menu>
