@@ -1,6 +1,6 @@
-Assignment in Mobile Application Development - Part 2
+#Assignment in Mobile Application Development - Part 2 
 
-# tech_press_fot
+*Tech_press_fot*
 News platform for University students and staffs
 
 ## Technologies Used
