@@ -1,8 +1,7 @@
 #Assignment in Mobile Application Development - Part 2 
 
-#tech_press_fot
-
-    *News platform for University students and staffs
+# Tech Press
+--News platform for University students and staffs
 
 ## Technologies Used
     Firebase Authentication: For secure user sign-up, login, and managing user sessions.
