@@ -47,8 +47,9 @@ public class ProfileActivity extends AppCompatActivity implements EditProfileDia
         ImageView profileImageView = findViewById(R.id.profileImageView);
         textViewUserName = findViewById(R.id.textViewUserName);
         textViewUserEmail = findViewById(R.id.textViewUserEmail);
-        TextView btnEditProfile = findViewById(R.id.btnEditProfile);
+        //TextView btnEditProfile = findViewById(R.id.btnEditProfile);
         Button btnHome = findViewById(R.id.btnHome);
+        Button btnEdit = findViewById(R.id.btnEdit);
         Button btnSignOut = findViewById(R.id.btnSignOut);
         Button btnAbout = findViewById(R.id.btnDev);
 
@@ -56,7 +57,7 @@ public class ProfileActivity extends AppCompatActivity implements EditProfileDia
         loadUserProfileData();
 
         // --- Set up Click Listeners ---
-        btnEditProfile.setOnClickListener(v -> showEditProfileDialog());
+        btnEdit.setOnClickListener(v -> showEditProfileDialog());
 
         btnSignOut.setOnClickListener(v -> {
             showSignOutConfirmationDialog(); // Call the new confirmation dialog

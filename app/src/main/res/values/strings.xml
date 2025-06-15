@@ -25,13 +25,13 @@
     <string name="save">Save</string>
     <string name="news_image">News Image</string>
     <string name="profile_picture">Profile Picture</string>
-    <string name="user_info">User Info.</string>
+    <string name="user_info">User Info</string>
     <string name="home">Home</string>
     <string name="about_developer">About Developer</string>
     <string name="sign_out">Sign Out</string>
     <string name="example_user_name">example user name</string>
     <string name="john_doe_example_com">john.doe@example.com</string>
-    <string name="edit_info">Edit Info</string>
+    <string name="edit_info">Edit</string>
     <string name="email">Email</string>
 
 </resources>

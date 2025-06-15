@@ -12,12 +12,13 @@
         android:id="@+id/profileImageView"
         android:layout_width="120dp"
         android:layout_height="120dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="68dp"
         android:background="@drawable/circle_shape"
         android:contentDescription="@string/profile_picture"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_default_profile"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:tint="@null" />
@@ -30,7 +31,6 @@
         android:gravity="center_horizontal"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/profileImageView">
 
@@ -48,6 +48,8 @@
             android:id="@+id/textViewUserName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
             android:text="@string/example_user_name"
             android:textColor="?attr/colorOnSurfaceVariant"
             android:textSize="16sp" />
@@ -105,16 +107,15 @@
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/btnEditProfile"
-        android:layout_width="80dp"
-        android:layout_height="26dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/edit_info"
-        android:textAlignment="center"
-        android:textColor="#2196F3"
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnEdit"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Edit"
         app:layout_constraintEnd_toEndOf="@+id/userInfoLayout"
-        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="@+id/userInfoLayout"
         app:layout_constraintTop_toBottomOf="@+id/userInfoLayout" />
 

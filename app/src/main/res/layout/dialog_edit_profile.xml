@@ -42,7 +42,8 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/email" app:boxStrokeColor="?attr/colorPrimary"
+        android:hint="@string/email"
+        app:boxStrokeColor="?attr/colorPrimary"
         app:hintTextColor="?attr/colorPrimary"
         android:layout_marginBottom="24dp">
 

@@ -122,11 +122,9 @@ public class EditProfileDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
 
-        // This ensures the dialog respects Material Design guidelines
-        return new Dialog(requireContext(), com.google.android.material.R.style.Theme_MaterialComponents_Dialog);
+        return new Dialog(requireContext());
     }
 
-    // Optional: Set dialog style (e.g., to be full-width)
     @Override
     public void onStart() {
         super.onStart();
@@ -143,7 +141,6 @@ public class EditProfileDialogFragment extends DialogFragment {
      * @return true if the email is valid, false otherwise.
      */
     private boolean isValidEmail(String email) {
-        // Simple regex for email validation (can be more complex if needed)
         String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$";
         Pattern pattern = Pattern.compile(emailRegex);
         Matcher matcher = pattern.matcher(email);
